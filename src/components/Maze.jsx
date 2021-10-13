@@ -1,8 +1,46 @@
 import { useState } from "react";
-import { Container, Form, Grid, Header, Popup } from "semantic-ui-react";
+import {
+  Button,
+  Container,
+  Form,
+  Grid,
+  Header,
+  Modal,
+  Popup,
+} from "semantic-ui-react";
 import { useMaze, useViewpoint } from "../utils/hooks";
 import { generateMaze } from "../utils/setting";
+import { ToastContainer, toast } from "react-toastify";
 
+const ShootModal = () => {
+  const [toggle, setToggle] = useState(true);
+  return (
+    <Modal
+      size={"small"}
+      open={toggle}
+      onClose={() => {
+        setToggle(false);
+        toast.dismiss();
+      }}
+    >
+      <Modal.Header>Wow! Congratulations</Modal.Header>
+      <Modal.Content>
+        <p>Completed in 2min 12s</p>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button
+          positive
+          onClick={() => {
+            setToggle(false);
+            toast.dismiss();
+          }}
+        >
+          Ok
+        </Button>
+      </Modal.Actions>
+    </Modal>
+  );
+};
 export const Maze = () => {
   const screen = useViewpoint();
   const { mazeRef, rowsColsRef, sizeRef, completeRef } = useMaze({
@@ -14,97 +52,108 @@ export const Maze = () => {
   const [maxWidth, setMaxWidth] = useState("400px");
 
   function onComplete() {
-    let complete = document.querySelector(".complete");
+    // let complete = document.querySelector(".complete");
     console.log("fixed");
-    complete.style.display = "block";
-    alert("Completed!!!");
-    window.location.reload();
+    // complete.style.display = "block";
+    toast(<ShootModal />, {
+      autoClose: false,
+      closeOnClick: true,
+      position: "top-center",
+      style: { opacity: "0" },
+      onClose() {
+        window.location.reload();
+      },
+    });
   }
 
   return (
-    <Grid.Row centered columns={gridColumn} style={{ maxWidth }}>
-      {/* <Grid.Row columns={screen === "mobile" ? 1 : screen === "tablet" ? 2 : 3}> */}
+    <>
+      <ToastContainer />
+      <Grid.Row centered columns={gridColumn} style={{ maxWidth }}>
+        {/* <Grid.Row columns={screen === "mobile" ? 1 : screen === "tablet" ? 2 : 3}> */}
 
-      <Grid.Column style={{ background: "#fb23ac", paddingTop: "20px" }}>
-        <div>
-          <Header
-            className="title"
-            textAlign="center"
-            content="Maze Generator"
-            size="huge"
-          />
-          <div className="complete">
-            <h3>Fastest time: 20m 5s</h3>
+        <Grid.Column style={{ background: "#fd00a0", paddingTop: "20px" }}>
+          <div>
+            <Header
+              className="title"
+              textAlign="center"
+              content="Maze Generator"
+              size="huge"
+            />
+            <div className="complete">
+              <h3>Fastest time: 20m 5s</h3>
+
+              <Form.Button
+                id="reset"
+                className="reset"
+                content="Reset"
+                size="large"
+                color="black"
+                fluid
+                onClick={() => window.location.reload()}
+              />
+            </div>
+          </div>
+        </Grid.Column>
+        <Grid.Column style={{ background: "pink" }}>
+          <Form
+            id="settings"
+            onSubmit={generateMaze.bind(null, {
+              mazeCurrent: mazeRef,
+              rowsColsCurrent: rowsColsRef,
+              sizeCurrent: sizeRef,
+              completeCurrent: completeRef,
+              changeDisplay: () => setGridColumn(2),
+              setMaxWidth: () => setMaxWidth("100%"),
+            })}
+            autoComplete="true"
+            size="big"
+            style={{ paddingTop: "14px", paddingBottom: "14px" }}
+          >
+            <Form.Input
+              id="size"
+              type="number"
+              value={mazeSize}
+              min="100"
+              max="500"
+              onChange={(e) => setMazeSize(e.target.valueAsNumber)}
+              name="mazeSize"
+              placeholder="Your maze size"
+              icon="box"
+              label="Maze size"
+            />
+            <Form.Input
+              id="number"
+              type="number"
+              value={rowColumSize}
+              min="5"
+              max="20"
+              onChange={(e) => setRowColumSize(e.target.valueAsNumber)}
+              name="rowColumSize"
+              placeholder="Your rows/columns size"
+              icon="columns"
+              label="Maze rows/columns size"
+            />
 
             <Form.Button
-              id="reset"
-              className="reset"
-              content="Reset"
-              size="large"
-              color="black"
+              id="submit"
+              type="submit"
+              content="Generate Maze"
               fluid
-              onClick={() => window.location.reload()}
+              size="large"
+              color="green"
+              icon="random"
             />
-          </div>
-        </div>
-      </Grid.Column>
-      <Grid.Column style={{ background: "pink" }}>
-        <Form
-          id="settings"
-          onSubmit={generateMaze.bind(null, {
-            mazeCurrent: mazeRef,
-            rowsColsCurrent: rowsColsRef,
-            sizeCurrent: sizeRef,
-            completeCurrent: completeRef,
-            changeDisplay: () => setGridColumn(2),
-            setMaxWidth: () => setMaxWidth("100%"),
-          })}
-          autoComplete="true"
-          size="big"
-        >
-          <Form.Input
-            id="size"
-            type="number"
-            value={mazeSize}
-            min="100"
-            max="500"
-            onChange={(e) => setMazeSize(e.target.valueAsNumber)}
-            name="mazeSize"
-            placeholder="Your maze size"
-            icon="box"
-            label="Maze size"
+          </Form>
+        </Grid.Column>
+        <Grid.Column>
+          <Popup
+            position="left center"
+            content="Navigate using your keyboard arrow keys"
+            trigger={<Container as="canvas" className="maze" />}
           />
-          <Form.Input
-            id="number"
-            type="number"
-            value={rowColumSize}
-            min="5"
-            max="20"
-            onChange={(e) => setRowColumSize(e.target.valueAsNumber)}
-            name="rowColumSize"
-            placeholder="Your rows/columns size"
-            icon="columns"
-            label="Maze rows/columns size"
-          />
-
-          <Form.Button
-            id="submit"
-            type="submit"
-            content="Generate Maze"
-            fluid
-            size="large"
-            color="green"
-            icon="random"
-          />
-        </Form>
-      </Grid.Column>
-      <Grid.Column>
-        <Popup
-          content="Navigate using your keyboard arrow keys"
-          trigger={<Container as="canvas" className="maze" />}
-        />
-        {/* <canvas className="maze"></canvas> */}
-      </Grid.Column>
-    </Grid.Row>
+        </Grid.Column>
+      </Grid.Row>
+    </>
   );
 };

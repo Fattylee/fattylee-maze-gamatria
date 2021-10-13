@@ -1,6 +1,7 @@
 // DEPTH FIRST SEARCH MAZE IMPLEMENTATION IN JAVASCRIPT BY CONOR BAILEY
 // https://github.com/conorbailey90/Javascript-DFS-Mazei
 
+import { toast } from "react-toastify";
 import { GlobalVar } from "./globalVar";
 
 // Initialize the canvas
@@ -69,14 +70,24 @@ export class Maze {
       GlobalVar.current = cell;
       GlobalVar.current.highlight(this.columns);
     }
+
+    // display alert and start timer after maze has finished initializing
+    if (this.stack.length === 0 && !GlobalVar.generationComplete) {
+      toast(<h1>Start Game!</h1>, {
+        autoClose: 2000,
+        position: "top-center",
+        onClose() {
+          // start timer
+          console.log("start timer", "generation completed");
+        },
+      });
+    }
+
     // If no more items in the stack then all cells have been visted and the function can be exited
     if (this.stack.length === 0) {
       GlobalVar.generationComplete = true;
-      console.log("generation completed");
-      // start timer
       return;
     }
-
     // Recursively call the draw function. This will be called up until the stack is empty
     window.requestAnimationFrame(() => {
       this.draw();
