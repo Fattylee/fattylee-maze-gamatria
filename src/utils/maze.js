@@ -73,12 +73,17 @@ export class Maze {
 
     // display alert and start timer after maze has finished initializing
     if (this.stack.length === 0 && !GlobalVar.generationComplete) {
+      // start timer
+      GlobalVar.startTime = Date.now();
       toast(<h1>Start Game!</h1>, {
         autoClose: 2000,
         position: "top-center",
         onClose() {
-          // start timer
-          console.log("start timer", "generation completed");
+          console.log(
+            "start timer",
+            "generation completed",
+            GlobalVar.startTime
+          );
         },
       });
     }

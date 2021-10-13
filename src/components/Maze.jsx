@@ -1,61 +1,68 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Container,
   Form,
   Grid,
   Header,
-  Modal,
   Popup,
 } from "semantic-ui-react";
 import { useMaze, useViewpoint } from "../utils/hooks";
 import { generateMaze } from "../utils/setting";
 import { ToastContainer, toast } from "react-toastify";
+import { GlobalVar } from "../utils/globalVar";
+import moment from "moment";
+import { ShootModal } from "./ShootModal";
 
-const ShootModal = () => {
-  const [toggle, setToggle] = useState(true);
-  return (
-    <Modal
-      size={"small"}
-      open={toggle}
-      onClose={() => {
-        setToggle(false);
-        toast.dismiss();
-      }}
-    >
-      <Modal.Header>Wow! Congratulations</Modal.Header>
-      <Modal.Content>
-        <p>Completed in 2min 12s</p>
-      </Modal.Content>
-      <Modal.Actions>
-        <Button
-          positive
-          onClick={() => {
-            setToggle(false);
-            toast.dismiss();
-          }}
-        >
-          Ok
-        </Button>
-      </Modal.Actions>
-    </Modal>
-  );
+const getIntialState = ({ prop, defaultValue }) => {
+  try {
+    const mazeConfig = JSON.parse(localStorage.getItem("mazeConfig"));
+    if (mazeConfig) {
+      return mazeConfig[prop];
+    }
+    return defaultValue;
+  } catch (e) {
+    localStorage.removeItem("mazeConfig");
+  }
 };
 export const Maze = () => {
   const screen = useViewpoint();
   const { mazeRef, rowsColsRef, sizeRef, completeRef } = useMaze({
     onComplete,
   });
-  const [rowColumSize, setRowColumSize] = useState(20);
-  const [mazeSize, setMazeSize] = useState(500);
+  const [rowColumSize, setRowColumSize] = useState(
+    getIntialState({ prop: "rowColumSize", defaultValue: 20 })
+  );
+  const [mazeSize, setMazeSize] = useState(
+    getIntialState({ prop: "mazeSize", defaultValue: 500 })
+  );
   const [gridColumn, setGridColumn] = useState(1);
   const [maxWidth, setMaxWidth] = useState("400px");
+  const [fastestTime, setFastestTime] = useState(() => {
+    const fastT = parseInt(localStorage.getItem("fastestTime"));
+    if (fastT) {
+      return fastT;
+    }
+    return Infinity;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("fastestTime", fastestTime);
+  }, [fastestTime]);
+  useEffect(() => {
+    localStorage.setItem(
+      "mazeConfig",
+      JSON.stringify({ mazeSize, rowColumSize })
+    );
+  }, [mazeSize, rowColumSize]);
 
   function onComplete() {
-    // let complete = document.querySelector(".complete");
-    console.log("fixed");
-    // complete.style.display = "block";
-    toast(<ShootModal />, {
+    const timeDiff = Date.now() - GlobalVar.startTime;
+    if (timeDiff < fastestTime) {
+      setFastestTime(timeDiff);
+    }
+    console.log("fixed", timeDiff);
+    toast(<ShootModal elapsedTime={timeDiff} />, {
       autoClose: false,
       closeOnClick: true,
       position: "top-center",
@@ -72,7 +79,7 @@ export const Maze = () => {
       <Grid.Row centered columns={gridColumn} style={{ maxWidth }}>
         {/* <Grid.Row columns={screen === "mobile" ? 1 : screen === "tablet" ? 2 : 3}> */}
 
-        <Grid.Column style={{ background: "#fd00a0", paddingTop: "20px" }}>
+        <Grid.Column style={{ background: "#fda6ee", paddingTop: "20px" }}>
           <div>
             <Header
               className="title"
@@ -81,17 +88,34 @@ export const Maze = () => {
               size="huge"
             />
             <div className="complete">
-              <h3>Fastest time: 20m 5s</h3>
+              <h3>
+                Fastest time:{" "}
+                {fastestTime === Infinity
+                  ? ""
+                  : moment(fastestTime).format("mm[min] ss[s]")}
+              </h3>
 
-              <Form.Button
-                id="reset"
-                className="reset"
-                content="Reset"
-                size="large"
-                color="black"
-                fluid
-                onClick={() => window.location.reload()}
-              />
+              <div>
+                <Button
+                  id="reset"
+                  className="reset"
+                  content="Reset"
+                  size="large"
+                  color="pink"
+                  onClick={() => {
+                    localStorage.setItem("fastestTime", "");
+                    window.location.reload();
+                  }}
+                />
+                <Button
+                  id="reload"
+                  className="reload"
+                  content="Reload"
+                  size="large"
+                  color="black"
+                  onClick={() => window.location.reload()}
+                />
+              </div>
             </div>
           </div>
         </Grid.Column>
@@ -141,7 +165,7 @@ export const Maze = () => {
               content="Generate Maze"
               fluid
               size="large"
-              color="green"
+              color="black"
               icon="random"
             />
           </Form>
