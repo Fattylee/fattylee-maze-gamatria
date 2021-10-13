@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { move } from "./setting";
 
 export const useForm = (initialValue, cb) => {
   const [error, setError] = useState({});
@@ -51,4 +52,28 @@ export const useViewpoint = () => {
   }, [handleResize]);
 
   return breakPoint;
+};
+
+export const useMaze = ({ onComplete }) => {
+  const mazeRef = useRef(null);
+  const rowsColsRef = useRef(null);
+  const sizeRef = useRef(null);
+  const completeRef = useRef(null);
+
+  useEffect(() => {
+    let maze = document.querySelector(".maze");
+    let rowsCols = document.querySelector("#number");
+    let size = document.querySelector("#size");
+
+    mazeRef.current = maze;
+    rowsColsRef.current = rowsCols;
+    sizeRef.current = size;
+
+    document.addEventListener("keydown", move.bind(null, onComplete));
+    return () => {
+      document.removeEventListener("keydown", move.bind(null, onComplete));
+    };
+  }, [onComplete]);
+
+  return { mazeRef, rowsColsRef, sizeRef, completeRef };
 };

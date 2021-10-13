@@ -12,9 +12,7 @@ export const Home = (props) => {
 
   return (
     <Grid fluid="true">
-      <Grid.Row centered>
-        <Maze />
-      </Grid.Row>
+      <Maze />
 
       <Grid.Row columns={screen === "mobile" ? 1 : screen === "tablet" ? 2 : 3}>
         {isAuthenticated && (

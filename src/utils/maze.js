@@ -72,6 +72,8 @@ export class Maze {
     // If no more items in the stack then all cells have been visted and the function can be exited
     if (this.stack.length === 0) {
       GlobalVar.generationComplete = true;
+      console.log("generation completed");
+      // start timer
       return;
     }
 
@@ -79,9 +81,6 @@ export class Maze {
     window.requestAnimationFrame(() => {
       this.draw();
     });
-    //     setTimeout(() => {rd
-    //       this.draw();
-    //     }, 10);
   }
 }
 
@@ -221,7 +220,3 @@ class Cell {
     }
   }
 }
-
-// let newMaze = new Maze(600, 50, 50);
-// newMaze.setup();
-// newMaze.draw();
