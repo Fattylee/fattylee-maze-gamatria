@@ -81,7 +81,8 @@ export const useMaze = ({ onComplete }) => {
       document.removeEventListener("touchstart", handleTouchStart, false);
       document.removeEventListener("touchmove", handleTouchMove, false);
     };
-  }, [onComplete, handleTouchMove, handleTouchStart]);
+    // }, [onComplete, handleTouchMove, handleTouchStart]);
+  }, []);
 
   return { mazeRef, rowsColsRef, sizeRef, completeRef };
 };
