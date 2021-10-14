@@ -47,6 +47,12 @@ export const Maze = () => {
   });
 
   useEffect(() => {
+    toast(
+      "Navigate using your keyboard arrow keys on a PC or mouse/touch movement to play the maze game",
+      { autoClose: 5000 }
+    );
+  }, []);
+  useEffect(() => {
     localStorage.setItem("fastestTime", fastestTime);
   }, [fastestTime]);
   useEffect(() => {
@@ -61,7 +67,7 @@ export const Maze = () => {
     if (timeDiff < fastestTime) {
       setFastestTime(timeDiff);
     }
-    console.log("fixed", timeDiff);
+
     toast(<ShootModal elapsedTime={timeDiff} />, {
       autoClose: false,
       closeOnClick: true,
@@ -77,9 +83,13 @@ export const Maze = () => {
     <>
       <ToastContainer />
       <Grid.Row centered columns={gridColumn} style={{ maxWidth }}>
-        {/* <Grid.Row columns={screen === "mobile" ? 1 : screen === "tablet" ? 2 : 3}> */}
-
-        <Grid.Column style={{ background: "#fda6ee", paddingTop: "20px" }}>
+        <Grid.Column
+          style={{
+            background: "#fda6ee",
+            paddingTop: "20px",
+            marginBottom: "14px",
+          }}
+        >
           <div>
             <Header
               className="title"
@@ -127,7 +137,10 @@ export const Maze = () => {
               rowsColsCurrent: rowsColsRef,
               sizeCurrent: sizeRef,
               completeCurrent: completeRef,
-              changeDisplay: () => setGridColumn(2),
+              changeDisplay: () =>
+                screen === "computer" || screen === "large screen"
+                  ? setGridColumn(2)
+                  : null,
               setMaxWidth: () => setMaxWidth("100%"),
             })}
             autoComplete="true"
@@ -171,11 +184,7 @@ export const Maze = () => {
           </Form>
         </Grid.Column>
         <Grid.Column>
-          <Popup
-            position="left center"
-            content="Navigate using your keyboard arrow keys"
-            trigger={<Container as="canvas" className="maze" />}
-          />
+          <canvas className="maze"></canvas>
         </Grid.Column>
       </Grid.Row>
     </>
