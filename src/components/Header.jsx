@@ -2,8 +2,10 @@ import { Link } from "react-router-dom";
 import { Menu } from "semantic-ui-react";
 import { useActiveLink } from "../context/activeLink";
 import { useAuthState } from "../context/auth";
+import { useViewpoint } from "../utils/hooks";
 
 export const Header = () => {
+  const screen = useViewpoint();
   const { user, loading, logout } = useAuthState();
   const { handleItemClick, activeItem } = useActiveLink();
 
@@ -16,13 +18,13 @@ export const Header = () => {
         icon="globe"
         as={Link}
         to="/"
-        name="MazeGematria"
+        name={screen === "mobile" ? "MazeG" : "MazeGematria"}
         active={activeItem === "MazeGematria"}
         onClick={handleItemClick}
       />
       {!loading ? (
         <Menu.Menu position="right">
-          <Menu.Item name={user?.firstName} />
+          <Menu.Item name={user?.username} />
           <Menu.Item name="logout" as={Link} to="/" onClick={handleLogout} />
         </Menu.Menu>
       ) : null}

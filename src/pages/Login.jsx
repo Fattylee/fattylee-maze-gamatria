@@ -15,10 +15,8 @@ export const Login = (props) => {
   );
 
   const { login } = useAuthState();
-  const [loading, setLoading] = useState(false);
 
   function handleLoginUser() {
-    setLoading(true);
     login(value);
   }
 
@@ -35,7 +33,6 @@ export const Login = (props) => {
               autoComplete="true"
               onSubmit={handleSubmit}
               noValidate
-              loading={loading}
               success={false}
               error={!!Object.keys(error).length}
               size="big"

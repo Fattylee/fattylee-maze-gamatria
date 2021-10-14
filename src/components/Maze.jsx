@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Container,
-  Form,
-  Grid,
-  Header,
-  Popup,
-} from "semantic-ui-react";
+import { Button, Form, Grid, Header } from "semantic-ui-react";
 import { useMaze, useViewpoint } from "../utils/hooks";
 import { generateMaze } from "../utils/setting";
 import { ToastContainer, toast } from "react-toastify";

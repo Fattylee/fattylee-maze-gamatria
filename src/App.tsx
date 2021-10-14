@@ -10,6 +10,7 @@ import { NotFound } from "./pages/NotFound";
 import { FormProvider } from "./context/postForm";
 import { UIContextProvider } from "./context/uiContext";
 import { ActiveLinkProvider } from "./context/activeLink";
+import { ProtectedRoute } from "./context/ProtectedRoute";
 
 const App = () => {
   return (
@@ -21,7 +22,7 @@ const App = () => {
               <Container>
                 <Header />
                 <Switch>
-                  <Route exact path="/" component={Home} />
+                  <ProtectedRoute exact path="/" component={Home} />
                   <AuthRoute exact path="/login" component={Login} />
                   <Route component={NotFound} />
                 </Switch>
