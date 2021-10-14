@@ -7,13 +7,13 @@ interface IStateContext {
 
 const StateContext = createContext<IStateContext>({
   handleItemClick() {},
-  activeItem: "MazeGramatria",
+  activeItem: "MazeGematria",
 });
 
 const ActiveLinkProvider = ({ children }: { children: any }) => {
   const [activeItem, setActiveItem] = useState(() => {
     const pathname = window.location.pathname;
-    return pathname === "/" ? "MazeGramatria" : pathname.substr(1);
+    return pathname === "/" ? "MazeGematria" : pathname.substr(1);
   });
 
   const handleItemClick = (_e: any, { name }: { name: string }) => {

@@ -3,4 +3,5 @@ export class GlobalVar {
   static current;
   static goal;
   static startTime;
+  static newMaze;
 }

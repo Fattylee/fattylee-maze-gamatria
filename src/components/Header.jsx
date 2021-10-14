@@ -16,8 +16,8 @@ export const Header = () => {
         icon="globe"
         as={Link}
         to="/"
-        name="MazeGamatria"
-        active={activeItem === "MazeGamatria"}
+        name="MazeGematria"
+        active={activeItem === "MazeGematria"}
         onClick={handleItemClick}
       />
       {!loading ? (
@@ -35,8 +35,8 @@ export const Header = () => {
         icon="globe"
         as={Link}
         to="/"
-        name="MazeGamatria"
-        active={activeItem === "MazeGamatria"}
+        name="MazeGematria"
+        active={activeItem === "MazeGematria"}
         onClick={handleItemClick}
       />
       {!loading ? (
