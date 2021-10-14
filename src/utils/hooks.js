@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { touchEvent } from "./events/touchEvent";
-import { move, slide } from "./setting";
+import { useTouchEvent } from "./events/touchEvent";
+import { move } from "./setting";
 
 export const useForm = (initialValue, cb) => {
   const [error, setError] = useState({});
@@ -56,7 +56,7 @@ export const useViewpoint = () => {
 };
 
 export const useMaze = ({ onComplete }) => {
-  const [handleTouchMove, handleTouchStart] = touchEvent();
+  useTouchEvent({ onComplete });
 
   const mazeRef = useRef(null);
   const rowsColsRef = useRef(null);
@@ -73,15 +73,10 @@ export const useMaze = ({ onComplete }) => {
     sizeRef.current = size;
 
     document.addEventListener("keydown", move.bind(null, onComplete));
-    document.addEventListener("touchmove", slide.bind(null, onComplete));
     return () => {
       document.removeEventListener("keydown", move.bind(null, onComplete));
-      document.removeEventListener("touchmove", slide.bind(null, onComplete));
-
-      document.removeEventListener("touchstart", handleTouchStart, false);
-      document.removeEventListener("touchmove", handleTouchMove, false);
     };
-    // }, [onComplete, handleTouchMove, handleTouchStart]);
+    // }, [onComplete]);
   }, []);
 
   return { mazeRef, rowsColsRef, sizeRef, completeRef };

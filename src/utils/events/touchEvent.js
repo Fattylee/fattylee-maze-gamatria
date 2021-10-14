@@ -1,16 +1,31 @@
+import { useEffect } from "react";
 import { GlobalVar } from "../globalVar";
 
-export const touchEvent = () => {
-  document.addEventListener(
-    "touchstart",
-    handleTouchStart.bind(null, () => {}),
-    false
-  );
-  document.addEventListener(
-    "touchmove",
-    handleTouchMove.bind(null, () => {}),
-    false
-  );
+export const useTouchEvent = ({ onComplete }) => {
+  useEffect(() => {
+    document.addEventListener(
+      "touchstart",
+      handleTouchStart.bind(null, () => {}),
+      false
+    );
+    document.addEventListener(
+      "touchmove",
+      handleTouchMove.bind(null, onComplete),
+      false
+    );
+    return () => {
+      document.removeEventListener(
+        "touchstart",
+        handleTouchStart.bind(null, () => {}),
+        false
+      );
+      document.removeEventListener(
+        "touchmove",
+        handleTouchMove.bind(null, onComplete),
+        false
+      );
+    };
+  }, []);
 
   let xDown = null;
   let yDown = null;
@@ -47,7 +62,6 @@ export const touchEvent = () => {
       /*most significant*/
       if (xDiff > 0) {
         /* left swipe */
-        // slider.current.slickPause();
         if (!GlobalVar.current.walls.leftWall) {
           let next = GlobalVar.newMaze.grid[row][col - 1];
           GlobalVar.current = next;
@@ -58,7 +72,6 @@ export const touchEvent = () => {
         }
       } else {
         /* right swipe */
-        // slider.current.slickPause();
         console.log("swipe right");
         if (!GlobalVar.current.walls.rightWall) {
           let next = GlobalVar.newMaze.grid[row][col + 1];
@@ -71,7 +84,6 @@ export const touchEvent = () => {
     } else {
       if (yDiff > 0) {
         /* up swipe */
-        // slider.current.slickNext();
         if (!GlobalVar.current.walls.topWall) {
           let next = GlobalVar.newMaze.grid[row - 1][col];
           GlobalVar.current = next;
@@ -82,7 +94,6 @@ export const touchEvent = () => {
         }
       } else {
         /* down swipe */
-        // slider.current.slickPrev();
         console.log("swipe down");
         if (!GlobalVar.current.walls.bottomWall) {
           let next = GlobalVar.newMaze.grid[row + 1][col];
@@ -97,6 +108,4 @@ export const touchEvent = () => {
     xDown = null;
     yDown = null;
   }
-
-  return [handleTouchMove, handleTouchStart];
 };
