@@ -3,7 +3,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { Button, Modal } from "semantic-ui-react";
 
-export const ShootModal = ({ elapsedTime }) => {
+export const ShootModal = ({ elapsedTime, setNextLevel }) => {
   const [toggle, setToggle] = useState(true);
 
   return (
@@ -20,6 +20,16 @@ export const ShootModal = ({ elapsedTime }) => {
         <p>Completed in {moment(elapsedTime).format("mm[min] ss[s]")}</p>
       </Modal.Content>
       <Modal.Actions>
+        <Button
+          secondary
+          onClick={() => {
+            setToggle(false);
+            setNextLevel();
+            toast.dismiss();
+          }}
+        >
+          Next Level
+        </Button>
         <Button
           positive
           onClick={() => {

@@ -43,7 +43,7 @@ export const Login = (props) => {
               <Form.Input
                 type="text"
                 name="username"
-                placeholder="Your username"
+                placeholder="Your username. eg Mapopo"
                 icon="user"
                 error={error.username}
                 value={value.username}

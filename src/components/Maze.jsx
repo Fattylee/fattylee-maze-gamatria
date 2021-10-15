@@ -66,15 +66,21 @@ export const Maze = (props) => {
       setFastestTime(timeDiff);
     }
 
-    toast(<ShootModal elapsedTime={timeDiff} />, {
-      autoClose: false,
-      closeOnClick: true,
-      position: "top-center",
-      style: { opacity: "0" },
-      onClose() {
-        window.location.reload();
-      },
-    });
+    toast(
+      <ShootModal
+        elapsedTime={timeDiff}
+        setNextLevel={() => setRowColumSize((s) => s + 1)}
+      />,
+      {
+        autoClose: false,
+        closeOnClick: true,
+        position: "top-center",
+        style: { opacity: "0" },
+        onClose() {
+          window.location.reload();
+        },
+      }
+    );
   }
 
   return (
@@ -165,13 +171,13 @@ export const Maze = (props) => {
               id="number"
               type="number"
               value={rowColumSize}
-              min="5"
+              min="3"
               max="20"
               onChange={(e) => setRowColumSize(e.target.valueAsNumber)}
               name="rowColumSize"
               placeholder="Your rows/columns size"
               icon="columns"
-              label="Maze rows/columns size"
+              label={"Level " + rowColumSize}
             />
 
             <Form.Button
