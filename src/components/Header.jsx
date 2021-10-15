@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Menu } from "semantic-ui-react";
+import { Icon, Menu, Popup } from "semantic-ui-react";
 import { useActiveLink } from "../context/activeLink";
 import { useAuthState } from "../context/auth";
 import { useViewpoint } from "../utils/hooks";
@@ -22,12 +22,19 @@ export const Header = () => {
         active={activeItem === "MazeGematria"}
         onClick={handleItemClick}
       />
-      {!loading ? (
-        <Menu.Menu position="right">
-          <Menu.Item name={user?.username} />
-          <Menu.Item name="logout" as={Link} to="/" onClick={handleLogout} />
-        </Menu.Menu>
-      ) : null}
+
+      <Menu.Menu position="right">
+        <Menu.Item
+          icon={
+            <Popup
+              content="Navigate using your keyboard arrow keys on a PC or mouse/touch movement to play the maze game"
+              trigger={<Icon name="info circle" />}
+            />
+          }
+          name={user?.username}
+        />
+        <Menu.Item name="logout" as={Link} to="/" onClick={handleLogout} />
+      </Menu.Menu>
     </Menu>
   );
 

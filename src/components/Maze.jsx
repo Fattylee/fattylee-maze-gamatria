@@ -42,14 +42,19 @@ export const Maze = (props) => {
   });
 
   useEffect(() => {
+    if (localStorage.getItem("firstTime")) {
+      return;
+    }
     toast(
       "Navigate using your keyboard arrow keys on a PC or mouse/touch movement to play the maze game",
-      { autoClose: 5000 }
+      { autoClose: 10000 }
     );
+    localStorage.setItem("firstTime", "true");
     return () => {
       toast.dismiss();
     };
   }, []);
+
   useEffect(() => {
     localStorage.setItem("fastestTime", fastestTime);
   }, [fastestTime]);
