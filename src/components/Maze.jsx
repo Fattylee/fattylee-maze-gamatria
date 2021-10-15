@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { GlobalVar } from "../utils/globalVar";
 import moment from "moment";
 import { ShootModal } from "./ShootModal";
+import { useAuthState } from "../context/auth";
 
 const getIntialState = ({ prop, defaultValue }) => {
   try {
@@ -18,13 +19,14 @@ const getIntialState = ({ prop, defaultValue }) => {
     localStorage.removeItem("mazeConfig");
   }
 };
-export const Maze = () => {
+export const Maze = (props) => {
+  const { logout } = useAuthState();
   const screen = useViewpoint();
   const { mazeRef, rowsColsRef, sizeRef, completeRef } = useMaze({
     onComplete,
   });
   const [rowColumSize, setRowColumSize] = useState(
-    getIntialState({ prop: "rowColumSize", defaultValue: 20 })
+    getIntialState({ prop: "rowColumSize", defaultValue: 10 })
   );
   const [mazeSize, setMazeSize] = useState(
     getIntialState({ prop: "mazeSize", defaultValue: 500 })
@@ -44,6 +46,9 @@ export const Maze = () => {
       "Navigate using your keyboard arrow keys on a PC or mouse/touch movement to play the maze game",
       { autoClose: 5000 }
     );
+    return () => {
+      toast.dismiss();
+    };
   }, []);
   useEffect(() => {
     localStorage.setItem("fastestTime", fastestTime);
@@ -106,8 +111,9 @@ export const Maze = () => {
                   size="large"
                   color="pink"
                   onClick={() => {
-                    localStorage.setItem("fastestTime", "");
-                    window.location.reload();
+                    localStorage.removeItem("fastestTime");
+                    localStorage.removeItem("mazeConfig");
+                    props.history.push("/login");
                   }}
                 />
                 <Button
@@ -116,7 +122,10 @@ export const Maze = () => {
                   content="Reload"
                   size="large"
                   color="black"
-                  onClick={() => window.location.reload()}
+                  onClick={() => {
+                    props.history.push("/login");
+                    toast.dismiss();
+                  }}
                 />
               </div>
             </div>

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Card, Form, Grid, Header, Icon, Message } from "semantic-ui-react";
 import { useAuthState } from "../context/auth";
 
@@ -9,7 +8,7 @@ const initialValue = {
 };
 
 export const Login = (props) => {
-  const { error, value, handleSubmit, handleInput } = useForm(
+  const { error, setError, value, handleSubmit, handleInput } = useForm(
     initialValue,
     handleLoginUser
   );
@@ -17,6 +16,10 @@ export const Login = (props) => {
   const { login } = useAuthState();
 
   function handleLoginUser() {
+    if (!value.username) {
+      setError({ username: "Required" });
+      return;
+    }
     login(value);
   }
 
@@ -34,11 +37,9 @@ export const Login = (props) => {
               onSubmit={handleSubmit}
               noValidate
               success={false}
-              error={!!Object.keys(error).length}
               size="big"
             >
               <Message success header="Success" content="Login successful" />
-
               <Form.Input
                 type="text"
                 name="username"
@@ -50,8 +51,13 @@ export const Login = (props) => {
                 label="Username"
                 required={!!error.username}
               />
-
-              <Form.Button content="Login" fluid size="large" color="green" />
+              <Form.Button
+                content="Login"
+                fluid
+                size="large"
+                color="green"
+                type="submit"
+              />
             </Form>
           </Card.Content>
         </Card>

@@ -1,5 +1,5 @@
 // DEPTH FIRST SEARCH MAZE IMPLEMENTATION IN JAVASCRIPT BY CONOR BAILEY
-// https://github.com/conorbailey90/Javascript-DFS-Mazei
+// https://github.com/conorbailey90/Javascript-DFS-Maze
 
 import { toast } from "react-toastify";
 import { GlobalVar } from "./globalVar";
@@ -75,7 +75,7 @@ export class Maze {
     if (this.stack.length === 0 && !GlobalVar.generationComplete) {
       // start timer
       GlobalVar.startTime = Date.now();
-      toast(<h1>Start Game!</h1>, {
+      GlobalVar.startGameToastId = toast(<h1>Start Game!</h1>, {
         autoClose: 2000,
         position: "top-center",
         onClose() {
