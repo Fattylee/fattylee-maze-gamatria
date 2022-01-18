@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button, Form, Grid, Header } from "semantic-ui-react";
+import { useEffect, useRef, useState } from "react";
+import { Button, Form, Grid, Header, Ref } from "semantic-ui-react";
 import { useMaze, useViewpoint } from "../utils/hooks";
 import { generateMaze } from "../utils/setting";
 import { ToastContainer, toast } from "react-toastify";
@@ -20,6 +20,7 @@ const getIntialState = ({ prop, defaultValue }) => {
   }
 };
 export const Maze = (props) => {
+  const formRef = useRef(null);
   const { logout } = useAuthState();
   const screen = useViewpoint();
   const { mazeRef, rowsColsRef, sizeRef, completeRef } = useMaze({
@@ -74,7 +75,12 @@ export const Maze = (props) => {
     toast(
       <ShootModal
         elapsedTime={timeDiff}
-        setNextLevel={() => setRowColumSize((s) => s + 1)}
+        setNextLevel={() => {
+          setRowColumSize((s) => s + 1);
+          setTimeout(() => {
+            formRef.current?.querySelector("#submit").click();
+          }, 3000);
+        }}
       />,
       {
         autoClose: false,
@@ -91,6 +97,7 @@ export const Maze = (props) => {
   return (
     <>
       <ToastContainer />
+
       <Grid.Row centered columns={gridColumn} style={{ maxWidth }}>
         <Grid.Column
           style={{
@@ -185,15 +192,17 @@ export const Maze = (props) => {
               label={"Level " + rowColumSize}
             />
 
-            <Form.Button
-              id="submit"
-              type="submit"
-              content="Generate Maze"
-              fluid
-              size="large"
-              color="black"
-              icon="random"
-            />
+            <Ref innerRef={formRef}>
+              <Form.Button
+                id="submit"
+                type="submit"
+                content="Generate Maze"
+                fluid
+                size="large"
+                color="black"
+                icon="random"
+              />
+            </Ref>
           </Form>
         </Grid.Column>
         <Grid.Column>
